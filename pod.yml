@@ -4,6 +4,7 @@ metadata:
   name: nginx
   labels:
     run: nginx
+    key: value
 spec:
   containers:
   - name: nginx
