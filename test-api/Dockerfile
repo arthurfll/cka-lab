@@ -1,0 +1,25 @@
+# Etapa de compilação
+FROM golang:1.26-alpine AS builder
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+COPY main.go .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o api main.go
+
+# Etapa de execução
+FROM alpine:3.22
+
+WORKDIR /app
+
+COPY --from=builder /app/api .
+
+RUN mkdir -p /app/data
+
+EXPOSE 7000
+
+CMD ["./api"]

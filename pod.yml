@@ -1,13 +1,15 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: nginx
+  name: go-api
+  namespace: backend
   labels:
-    run: nginx
+    run: go-api
     key: value
 spec:
   containers:
-  - name: nginx
-    image: nginx
+    - name: go-api
+      image: go-api:latest
+      imagePullPolicy: IfNotPresent
 
 
