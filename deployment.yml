@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: go-api
+  namespace: backend
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: go-api
+
+  template:
+    metadata:
+      labels:
+        app: go-api
+
+    spec:
+      containers:
+        - name: go-api
+          image: go-api:latest
+          imagePullPolicy: IfNotPresent
+
