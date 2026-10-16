@@ -14,7 +14,6 @@ type Registro struct {
 }
 
 func main() {
-	// Conecta ao banco SQLite ou cria o arquivo app.db.
 	db, err := sql.Open("sqlite", "/app/data/app.db")
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +24,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Cria a tabela caso ela não exista.
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS registros (
 			id INTEGER PRIMARY KEY CHECK (id = 1),
@@ -36,7 +34,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Cria o registro inicial com valor 0, somente se não existir.
 	_, err = db.Exec(`
 		INSERT OR IGNORE INTO registros (id, valor)
 		VALUES (1, 0);
@@ -45,7 +42,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Endpoint único.
 	http.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
 		// Inicia uma transação.
 		tx, err := db.Begin()
@@ -55,7 +51,6 @@ func main() {
 		}
 		defer tx.Rollback()
 
-		// Incrementa o registro existente.
 		_, err = tx.Exec(`
 			UPDATE registros
 			SET valor = valor + 1
@@ -66,7 +61,6 @@ func main() {
 			return
 		}
 
-		// Consulta o valor atualizado.
 		var registro Registro
 
 		err = tx.QueryRow(`
@@ -80,22 +74,18 @@ func main() {
 			return
 		}
 
-		// Confirma a transação.
 		if err := tx.Commit(); err != nil {
 			http.Error(w, "Erro ao salvar registro", http.StatusInternalServerError)
 			return
 		}
 
-		// Retorna erro 500 se o valor ultrapassar 5.
 		if registro.Valor > 5 {
 			http.Error(w, "Limite excedido", http.StatusInternalServerError)
 			return
 		}
 
-		// Exibe o log no terminal.
 		log.Printf("Registro iterado: valor = %d", registro.Valor)
 
-		// Retorna o valor atualizado em JSON.
 		w.Header().Set("Content-Type", "application/json")
 
 		if err := json.NewEncoder(w).Encode(registro); err != nil {

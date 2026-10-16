@@ -1,4 +1,3 @@
-# Etapa de compilação
 FROM golang:1.26-alpine AS builder
 
 WORKDIR /app
@@ -11,7 +10,6 @@ COPY main.go .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o api main.go
 
-# Etapa de execução
 FROM alpine:3.22
 
 WORKDIR /app
