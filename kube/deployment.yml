@@ -6,6 +6,7 @@ metadata:
   namespace: backend
 
 spec:
+  strategy: {}
   replicas: 3
 
   selector:
