@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 
 metadata:
-  name: go-api
+  name: test-api
   namespace: backend
 
 spec:
@@ -11,16 +11,16 @@ spec:
 
   selector:
     matchLabels:
-      app: go-api
+      app: test-api
 
   template:
     metadata:
       labels:
-        app: go-api
+        app: test-api
 
     spec:
       containers:
-        - name: go-api
-          image: go-api:latest
+        - name: test-api
+          image: test-api:latest
           imagePullPolicy: IfNotPresent
 
